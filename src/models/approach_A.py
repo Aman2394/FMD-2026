@@ -15,7 +15,7 @@ class DualStreamClassifier(nn.Module):
                  dropout: float = 0.1):
         super().__init__()
         self.backbone  = AutoModelForSequenceClassification.from_pretrained(
-            model_name, num_labels=num_labels
+            model_name, num_labels=num_labels, ignore_mismatched_sizes=True
         )
         self.num_proj  = nn.Linear(numeric_dim, num_labels)
         self.dropout   = nn.Dropout(dropout)
