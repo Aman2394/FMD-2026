@@ -85,14 +85,6 @@ def main():
     else:
         print(f"\nSplit already exists at {FOLDS_PATH} — skipping regeneration.")
 
-    # --- Feature cache ---
-    feat_cols = [
-        "claim_hash", "n_numbers", "n_tickers",
-        "group_ticker", "n_tokens_approx",
-    ]
-    df[feat_cols].to_parquet("data/processed/features.parquet", index=False)
-    print("Saved data/processed/features.parquet")
-
     print("\nEDA complete.")
 
 

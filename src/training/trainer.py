@@ -34,7 +34,7 @@ class CheckpointManager:
 
 
 def train_epoch(model, loader: DataLoader, optimizer, device,
-                grad_accum_steps: int = 1) -> float:
+                grad_accum_steps: int = 1, scheduler=None) -> float:
     model.train()
     total_loss = 0.0
     optimizer.zero_grad()
@@ -49,6 +49,8 @@ def train_epoch(model, loader: DataLoader, optimizer, device,
 
         if (step + 1) % grad_accum_steps == 0:
             optimizer.step()
+            if scheduler is not None:
+                scheduler.step()
             optimizer.zero_grad()
 
     return total_loss / len(loader)
@@ -81,7 +83,7 @@ def eval_epoch(model, loader: DataLoader, device) -> tuple:
 def run_training(model, train_loader: DataLoader, val_loader: DataLoader,
                  optimizer, ckpt_manager: CheckpointManager,
                  device, n_epochs: int = 20, patience: int = 5,
-                 metric_fn=None):
+                 metric_fn=None, scheduler=None):
     """Generic training loop with early stopping."""
     from src.evaluation.metrics import compute_all
 
@@ -89,7 +91,7 @@ def run_training(model, train_loader: DataLoader, val_loader: DataLoader,
     no_improve = 0
 
     for epoch in range(1, n_epochs + 1):
-        train_loss = train_epoch(model, train_loader, optimizer, device)
+        train_loss = train_epoch(model, train_loader, optimizer, device, scheduler=scheduler)
         y_true, y_pred, y_prob = eval_epoch(model, val_loader, device)
         metrics = compute_all(y_true, y_pred, y_prob)
 

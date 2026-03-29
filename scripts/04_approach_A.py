@@ -88,17 +88,21 @@ def main():
         model = DualStreamClassifier(text_encoder).to(DEVICE)
         optimizer = AdamW(model.parameters(), lr=LR, weight_decay=0.01)
         total_steps = len(train_dl) * N_EPOCHS
-        get_linear_schedule_with_warmup(optimizer, int(0.1*total_steps), total_steps)
+        scheduler = get_linear_schedule_with_warmup(optimizer, int(0.1*total_steps), total_steps)
 
         ckpt = CheckpointManager(f"{RUN_ID}_seed{seed}")
         run_training(model, train_dl, val_dl, optimizer, ckpt,
-                     DEVICE, n_epochs=N_EPOCHS, patience=PATIENCE)
+                     DEVICE, n_epochs=N_EPOCHS, patience=PATIENCE, scheduler=scheduler)
 
         y_true_v, y_pred_v, y_prob_v = eval_epoch(model, val_dl, DEVICE)
         y_true_t, y_pred_t, y_prob_t = eval_epoch(model, test_dl, DEVICE)
         m_val  = compute_all(y_true_v, y_pred_v, y_prob_v)
         m_test = compute_all(y_true_t, y_pred_t, y_prob_t)
         seed_val_f1s.append(m_val["macro_f1"])
+
+        os.makedirs("runs/oof", exist_ok=True)
+        np.save(f"runs/oof/{RUN_ID}_seed{seed}_prob.npy", y_prob_v)
+        np.save(f"runs/oof/{RUN_ID}_seed{seed}_true.npy", y_true_v)
 
         print(f"  val  macro_f1={m_val['macro_f1']:.4f}")
         print(f"  test macro_f1={m_test['macro_f1']:.4f}")
