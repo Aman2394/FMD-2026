@@ -194,9 +194,11 @@ def main():
         per_device_train_batch_size = BATCH_SIZE,
         gradient_accumulation_steps = GRAD_ACCUM,
         learning_rate               = LR,
-        warmup_ratio                = WARMUP_RATIO,
+        warmup_steps                = 20,
         lr_scheduler_type           = "cosine",
-        fp16                        = True,
+        fp16                        = False,          # AMP off — bf16 LoRA params break fp16 scaler
+        bf16                        = False,          # T4 doesn't support bf16 natively
+        optim                       = "paged_adamw_8bit",  # memory-efficient, dtype-safe
         logging_steps               = 10,
         save_strategy               = "epoch",
         seed                        = SEED,
