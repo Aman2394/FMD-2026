@@ -151,6 +151,15 @@ def main():
     # ── format training data ─────────────────────────────────────────────────
     train_texts = [build_chat(r, tokenizer, include_response=True)
                    for r in train.to_dict("records")]
+    # Pre-truncate so the trainer never sees sequences longer than MAX_SEQ_LEN
+    tokenizer.truncation_side = "left"   # keep the end (answer) intact
+    train_texts = [
+        tokenizer.decode(
+            tokenizer.encode(t, max_length=MAX_SEQ_LEN, truncation=True),
+            skip_special_tokens=False,
+        )
+        for t in train_texts
+    ]
     hf_train = Dataset.from_dict({"text": train_texts})
 
     # ── model (4-bit QLoRA) ───────────────────────────────────────────────────
@@ -191,7 +200,6 @@ def main():
         logging_steps               = 10,
         save_strategy               = "epoch",
         seed                        = SEED,
-        max_seq_length              = MAX_SEQ_LEN,
         dataset_text_field          = "text",
         report_to                   = "none",
     )
