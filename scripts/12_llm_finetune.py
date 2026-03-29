@@ -25,7 +25,7 @@ from transformers import (
     BitsAndBytesConfig,
 )
 from peft import LoraConfig, get_peft_model, TaskType
-from trl import SFTTrainer, SFTConfig, DataCollatorForCompletionOnlyLM
+from trl import SFTTrainer, SFTConfig
 
 from src.data.loader import sha256_file
 from src.data.folds import load_split
@@ -178,13 +178,6 @@ def main():
     model = get_peft_model(model, lora_cfg)
     model.print_trainable_parameters()
 
-    # ── loss masking: only train on assistant response ────────────────────────
-    response_template = "<|im_start|>assistant\n"
-    collator = DataCollatorForCompletionOnlyLM(
-        response_template=response_template,
-        tokenizer=tokenizer,
-    )
-
     # ── SFT training ──────────────────────────────────────────────────────────
     sft_cfg = SFTConfig(
         output_dir                  = CKPT_DIR,
@@ -204,10 +197,9 @@ def main():
     )
 
     trainer = SFTTrainer(
-        model            = model,
-        args             = sft_cfg,
-        train_dataset    = hf_train,
-        data_collator    = collator,
+        model         = model,
+        args          = sft_cfg,
+        train_dataset = hf_train,
     )
 
     print("\nStarting QLoRA fine-tuning...")
