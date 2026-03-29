@@ -1,0 +1,19 @@
+torch
+torchvision
+transformers
+datasets
+tokenizers
+scikit-learn
+scipy
+numpy
+pandas
+pyarrow
+peft
+matplotlib
+seaborn
+pytest
+
+# Optional — install separately if needed:
+# torch-geometric        # Approach D (GNN)
+# bitsandbytes           # QLoRA (Approach E, VRAM < 24 GB)
+# sentence-transformers  # Approach D node embeddings

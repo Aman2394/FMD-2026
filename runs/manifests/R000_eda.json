@@ -1,0 +1,11 @@
+{
+  "run_id": "R000_eda",
+  "timestamp": "2026-03-29T09:05:00.612430",
+  "hashes": {
+    "SFT": "ab5a16ffbe70151929eab025115da38d4d91139cc4be270c47d836ed1ea6a11a",
+    "RL": "cc40d8a977573024e26bcb89f275640cc7d1e785714b4642e073ec229066bd4b"
+  },
+  "config": {
+    "script": "01_eda.py"
+  }
+}

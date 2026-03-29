@@ -1,0 +1,7 @@
+run_id,model,dedup,split,seed,macro_f1,f1_false,pr_auc_false,roc_auc,brier,ece,threshold,notes
+R001_seed0,TF-IDF+LR,Y,stratified_val,0,0.3408,0.3891,0.4603,0.2955,0.2757,0.2127,0.5,test_macro_f1=0.3187
+R001_seed1,TF-IDF+LR,Y,stratified_val,1,0.3408,0.3891,0.4603,0.2955,0.2757,0.2127,0.5,test_macro_f1=0.3187
+R001_seed2,TF-IDF+LR,Y,stratified_val,2,0.3408,0.3891,0.4603,0.2955,0.2757,0.2127,0.5,test_macro_f1=0.3187
+R002_seed0,kNN vote,Y,stratified_val,0,0.4944,0.5000,0.5825,0.5121,0.2589,0.0714,0.5,test_macro_f1=0.4321
+R002_seed1,kNN vote,Y,stratified_val,1,0.4944,0.5000,0.5825,0.5121,0.2589,0.0714,0.5,test_macro_f1=0.4321
+R002_seed2,kNN vote,Y,stratified_val,2,0.4944,0.5000,0.5825,0.5121,0.2589,0.0714,0.5,test_macro_f1=0.4321
