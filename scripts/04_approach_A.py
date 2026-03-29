@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import torch
 from torch.utils.data import Dataset, DataLoader
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer
 from torch.optim import AdamW
 from transformers import get_linear_schedule_with_warmup
 
@@ -84,8 +84,7 @@ def main():
         val_dl   = DataLoader(DualStreamDataset(val,   tokenizer, MAX_LEN), batch_size=BATCH_SIZE)
         test_dl  = DataLoader(DualStreamDataset(test,  tokenizer, MAX_LEN), batch_size=BATCH_SIZE)
 
-        text_encoder = AutoModel.from_pretrained(MODEL_NAME)
-        model = DualStreamClassifier(text_encoder).to(DEVICE)
+        model = DualStreamClassifier(MODEL_NAME).to(DEVICE)
         optimizer = AdamW(model.parameters(), lr=LR, weight_decay=0.01)
         total_steps = len(train_dl) * N_EPOCHS
         scheduler = get_linear_schedule_with_warmup(optimizer, int(0.1*total_steps), total_steps)
